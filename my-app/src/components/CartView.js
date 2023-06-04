@@ -10,6 +10,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { useApplicationContext } from '../contexts/ApplicationContext';
+import Checkout from './Checkout';
 
 export default function CartView() {
   const { cartItems, removeFromCart, setRentalDays } = useApplicationContext();
@@ -28,7 +29,7 @@ export default function CartView() {
       {/* Cart should appear as a drawer from the right side of the screen */}
       {['right'].map((anchor) => (
         <React.Fragment key={anchor}>
-          <IconButton size="large" aria-label="show 4 new mails" color="inherit" onClick={toggleDrawer(true)}>
+          <IconButton size="large" aria-label="Rentals in cart" color="inherit" onClick={toggleDrawer(true)}>
             <Badge badgeContent={cartItems.length} color="error">
               <ShoppingCartIcon />
             </Badge>
@@ -40,70 +41,62 @@ export default function CartView() {
           >
             {/* Display all the items in the cart as a List */}
             {
-              cartItems.length &&
-              <List sx={{ minWidth: 350, bgcolor: 'background.paper' }}>
-                {cartItems.map(item => (
-                  <React.Fragment key={item.id}>
-                    <ListItem alignItems="flex-start">
-                      <ListItemAvatar>
-                        <Avatar alt={item.name} src={item.imageUrl} />
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={item.name}
-                        secondary={
-                          <React.Fragment>
-                            <Typography
-                              sx={{ display: 'inline' }}
-                              component="span"
-                              variant="body2"
-                              color="text.primary"
-                            >
-                              Price Per Day - $
-                              {item.pricePerDay}
-                              <br />
-                              Price for {item.days} days: ${item.days * item.pricePerDay}
-                            </Typography>
-                          </React.Fragment>
-                        }
-                      />
-                      {/* Modify the number of rental days for a car  */}
-                      <TextField
-                        type='number'
-                        label="Days"
-                        defaultValue={item.days}
-                        onChange={(e) => setRentalDays(item.id, e.target.value)}
-                        inputProps={{ min: 1, max: 10 }}
-                        sx={{ width: 0.3 }}
-                      />
-                    </ListItem>
-                    <ListItem alignItems='flex-start'>
-                      {/* Remove a Rental item from the cart */}
-                      <Button
-                        variant='contained'
-                        size='small'
-                        color='error'
-                        onClick={() => removeFromCart(item)}
-                      >
-                        Remove {item.name}
-                      </Button>
-                    </ListItem>
-                  </React.Fragment>
-                ))}
-                <ListItem>
-                  {/* Head to the checkout screen */}
-                  <Button
-                    variant='contained'
-                    size='large'
-                  >
-                    Checkout
-                  </Button>
-                </ListItem>
-              </List>
-            }
-            {/* Display message if cart is empty */}
-            {
-              !cartItems.length &&
-              <p>Your cart is empty</p>
+              cartItems.length ?
+                <List sx={{ minWidth: 350, bgcolor: 'background.paper' }}>
+                  {cartItems.map(item => (
+                    <React.Fragment key={item.id}>
+                      <ListItem alignItems="flex-start">
+                        <ListItemAvatar>
+                          <Avatar alt={item.name} src={item.imageUrl} />
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={item.name}
+                          secondary={
+                            <React.Fragment>
+                              <Typography
+                                sx={{ display: 'inline' }}
+                                component="span"
+                                variant="body2"
+                                color="text.primary"
+                              >
+                                Price Per Day - $
+                                {item.pricePerDay}
+                                <br />
+                                Price for {item.days} days: ${item.days * item.pricePerDay}
+                              </Typography>
+                            </React.Fragment>
+                          }
+                        />
+                        {/* Modify the number of rental days for a car  */}
+                        <TextField
+                          type='number'
+                          label="Days"
+                          defaultValue={item.days}
+                          onChange={(e) => setRentalDays(item.id, e.target.value)}
+                          inputProps={{ min: 1, max: 10 }}
+                          sx={{ width: 0.3 }}
+                        />
+                      </ListItem>
+                      <ListItem alignItems='flex-start'>
+                        {/* Remove a Rental item from the cart */}
+                        <Button
+                          variant='contained'
+                          size='small'
+                          color='error'
+                          onClick={() => removeFromCart(item)}
+                        >
+                          Remove {item.name}
+                        </Button>
+                      </ListItem>
+                    </React.Fragment>
+                  ))}
+                  <ListItem>
+                    {/* Head to the checkout screen */}
+                    <Checkout />
+                  </ListItem>
+                </List>
+                :
+                <p>No car has been reserved</p>
             }
           </Drawer>
         </React.Fragment>

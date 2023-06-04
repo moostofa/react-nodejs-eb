@@ -1,20 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import SearchAppBar from './SearchAppBar';
-import RentalMediaCard from './RentalMediaCard';
 import { Grid } from '@mui/material';
+import React from 'react';
+import { useApplicationContext } from '../contexts/ApplicationContext';
+import RentalMediaCard from './RentalMediaCard';
+import SearchAppBar from './SearchAppBar';
 
 const HomeView = () => {
-  const [rentals, setRentals] = useState([]);
-  useEffect(() => {
-    fetch("rentals.json", {
-      headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json"
-      }
-    })
-      .then(res => res.json())
-      .then(data => setRentals(data))
-  }, []);
+  // Get the Rental Cars from JSON file when the page loads
+  const { rentals } = useApplicationContext();
 
   return (
     <div>

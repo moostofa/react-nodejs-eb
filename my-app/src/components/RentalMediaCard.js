@@ -11,7 +11,7 @@ import { useApplicationContext } from '../contexts/ApplicationContext';
 import RentalDetailsModal from './RentalDetailsModal';
 
 export default function RentalMediaCard({ rentalCar }) {
-  const { addToCart, cartContains } = useApplicationContext();
+  const { addToCart, cartContains, isAvailable } = useApplicationContext();
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const handleOpen = () => setDetailsModalOpen(true);
   const handleClose = () => setDetailsModalOpen(false);
@@ -33,17 +33,24 @@ export default function RentalMediaCard({ rentalCar }) {
         </Typography>
       </CardContent>
       <CardActions>
-        {/* Button appearance changes depending on whether this item is in the cart or not */}
-        <Button
-          size="small"
-          variant='contained'
-          color={existsInCart ? 'info' : 'success'}
-          endIcon={existsInCart ? <DoneIcon /> : <ShoppingCartIcon />}
-          onClick={() => addToCart(rentalCar)}
-          disabled={existsInCart}
-        >
-          {existsInCart ? 'Added to Cart' : 'Add to cart'}
-        </Button>
+        {/* Button appearance changes depending on whether this item is in the cart or not, or if it is unavailable */}
+        {
+          isAvailable(rentalCar) && rentalCar.availability === "True" ? (
+            <Button
+              size="small"
+              variant='contained'
+              color={existsInCart ? 'info' : 'success'}
+              endIcon={existsInCart ? <DoneIcon /> : <ShoppingCartIcon />}
+              onClick={() => addToCart(rentalCar)}
+              disabled={existsInCart}
+            >
+              {(existsInCart ? 'Added to Cart' : 'Add to cart')}
+            </Button>
+          ) :
+            <Button variant='contained' disabled>
+              Unavailable
+            </Button>
+        }
         {/* Button used to open the rental details modal */}
         <Button
           size="small"

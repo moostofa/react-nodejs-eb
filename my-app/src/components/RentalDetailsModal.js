@@ -23,7 +23,7 @@ const style = {
 };
 
 export default function RentalDetailsModal({ rentalCar, open, handleClose }) {
-  const { addToCart, cartContains } = useApplicationContext();
+  const { addToCart, cartContains, isAvailable } = useApplicationContext();
   const existsInCart = cartContains(rentalCar);
   return (
     <Modal
@@ -48,16 +48,25 @@ export default function RentalDetailsModal({ rentalCar, open, handleClose }) {
           <RentalDetailsTable rentalCar={rentalCar} />
           < br />
           {/* Button appearance changes depending on whether this item is in the cart or not */}
-          <Button
-            size="large"
-            variant='contained'
-            color={existsInCart ? 'info' : 'success'}
-            endIcon={existsInCart ? <DoneIcon /> : <ShoppingCartIcon />}
-            onClick={() => addToCart(rentalCar)}
-            disabled={existsInCart}
-          >
-            {existsInCart ? 'Added to Cart' : 'Add to cart'}
-          </Button>
+          {
+            isAvailable(rentalCar) && rentalCar.availability === "True" ? (
+              <Button
+                size="large"
+                variant='contained'
+                color={existsInCart ? 'info' : 'success'}
+                endIcon={existsInCart ? <DoneIcon /> : <ShoppingCartIcon />}
+                onClick={() => addToCart(rentalCar)}
+                disabled={existsInCart}
+              >
+                {existsInCart ? 'Added to Cart' : 'Add to cart'}
+              </Button>
+            ) :
+              <div>
+                <p>Sorry, this car is not available now. Please try other cars.</p>
+                <p>Dear Marker,</p>
+                <p>For your convenience, you delete the Renting History item which contains this car to make it available again.</p>
+              </div>
+          }
           {/* Display a message when a rental item already exists in cart */}
           {existsInCart &&
             <div>
